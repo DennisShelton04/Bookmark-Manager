@@ -36,8 +36,17 @@ public class BookMarkController {
     return ResponseEntity.ok(bookmark);
   }
 
+  @PutMapping("/{id}")
+  public ResponseEntity<Bookmark> updateBookmark(@PathVariable UUID id, @RequestBody Bookmark bookmarkDetails) {
+    Bookmark updatedBookmark = bookmarkService.updateBookmark(id, bookmarkDetails);
+    return ResponseEntity.ok(updatedBookmark);
+  }
 
-
-
+  // Delete a bookmark by ID
+  @DeleteMapping("/{id}")
+  public ResponseEntity<Void> deleteBookmark(@PathVariable UUID id) {
+    bookmarkService.deleteBookmark(id);
+    return ResponseEntity.noContent().build();
+  }
 
 }

@@ -20,4 +20,9 @@ public class GlobalExceptionHandler {
   public ResponseEntity<String> handleIllegalArgumentException(RateLimitException ex) {
     return ResponseEntity.status(429).body(ex.getMessage());
   }
+
+  @ExceptionHandler(ResourceNotFoundException.class)
+  public ResponseEntity<String> resourceNotFoundException(ResourceNotFoundException ex){
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+  }
 }

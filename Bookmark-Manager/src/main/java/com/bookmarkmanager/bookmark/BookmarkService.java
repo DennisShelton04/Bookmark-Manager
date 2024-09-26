@@ -2,10 +2,12 @@ package com.bookmarkmanager.bookmark;
 
 import com.bookmarkmanager.bookmarkfolder.FolderRepository;
 import com.bookmarkmanager.exception.BookmarkNotFoundException;
+import com.bookmarkmanager.exception.ResourceNotFoundException;
 import com.bookmarkmanager.pojo.Bookmark;
 import com.bookmarkmanager.pojo.Folder;
 import lombok.RequiredArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,5 +48,29 @@ public class BookmarkService {
   public Bookmark getBookmarkById(UUID id) {
     return bookmarkRepository.findById(id)
             .orElseThrow(() -> new BookmarkNotFoundException("Bookmark not found with id: " + id));
+  }
+
+  public Bookmark updateBookmark(UUID id, Bookmark bookmarkDetails) {
+    // Find the bookmark by ID, throw an exception if not found
+    Bookmark existingBookmark = bookmarkRepository.findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("Bookmark not found with ID: " + id));
+
+    // Update the bookmark details
+    existingBookmark.setTitle(bookmarkDetails.getTitle());
+    existingBookmark.setUrl(bookmarkDetails.getUrl());
+    if(existingBookmark.getFolderId()!=null) {
+      existingBookmark.setFolder(bookmarkDetails.getFolder());
+    }
+    // Save and return the updated bookmark
+    return bookmarkRepository.save(existingBookmark);
+  }
+
+
+  public void deleteBookmark(UUID id) {
+    if (bookmarkRepository.existsById(id)) {
+      bookmarkRepository.deleteById(id);
+    } else {
+      throw new ResourceNotFoundException("Bookmark not found with id: " + id);
+    }
   }
 }
