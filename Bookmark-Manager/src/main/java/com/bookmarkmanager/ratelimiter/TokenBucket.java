@@ -23,6 +23,17 @@ public class TokenBucket {
     }
     return false;
   }
+  // Method to get the number of available tokens
+  public synchronized long getAvailableTokens() {
+    refill(); // Ensure tokens are refilled before checking
+    return tokens;
+  }
+
+  // Method to get the reset time for the next refill
+  public synchronized long getResetTime() {
+    long nextResetTime = lastRefillTime + refillInterval;
+    return Math.max(0, nextResetTime - System.currentTimeMillis()); // Returns time until next refill
+  }
 
 
 

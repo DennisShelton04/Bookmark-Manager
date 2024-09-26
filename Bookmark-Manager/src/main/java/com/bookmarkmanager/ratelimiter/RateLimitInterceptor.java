@@ -27,7 +27,10 @@ public class RateLimitInterceptor implements HandlerInterceptor {
       if (rateLimited != null) {
         String clientIP = request.getRemoteAddr();
         TokenBucket bucket = buckets.computeIfAbsent(clientIP, k -> new TokenBucket(rateLimited.maxTokens(), rateLimited.refillRate(), rateLimited.refillInterval()));
-        logger.info("Client IP: {}, Remaining Tokens: {}", clientIP,bucket.toString());
+        logger.info("Client IP: {}, Remaining Tokens: {}", clientIP, bucket);
+        response.setHeader("X-RateLimit-Limit", String.valueOf(rateLimited.maxTokens()));
+        response.setHeader("X-RateLimit-Remaining", String.valueOf(bucket.getAvailableTokens())); // Assuming you have a method to get available tokens
+        response.setHeader("X-RateLimit-Reset", String.valueOf(bucket.getResetTime())); // Implement this method in TokenBucket
         if (bucket.tryConsume(1)) {
           return true; // Proceed with the request
         } else {
