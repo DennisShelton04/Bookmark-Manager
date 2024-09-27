@@ -16,18 +16,11 @@ public class RateLimitInterceptor implements HandlerInterceptor {
 
   @Override
   public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-    final Logger logger = LoggerFactory.getLogger(RateLimitInterceptor.class);
-    logger.info("comming for ratelimiter");
-    logger.info("Handler Type: {}", handler.getClass().getName());
-
-    if (handler instanceof HandlerMethod) {
-      HandlerMethod handlerMethod = (HandlerMethod) handler;
-      logger.info("cooming for handler");
+    if (handler instanceof HandlerMethod handlerMethod) {
       RateLimited rateLimited = handlerMethod.getMethodAnnotation(RateLimited.class);
       if (rateLimited != null) {
         String clientIP = request.getRemoteAddr();
         TokenBucket bucket = buckets.computeIfAbsent(clientIP, k -> new TokenBucket(rateLimited.maxTokens(), rateLimited.refillRate(), rateLimited.refillInterval()));
-        logger.info("Client IP: {}, Remaining Tokens: {}", clientIP, bucket);
         response.setHeader("X-RateLimit-Limit", String.valueOf(rateLimited.maxTokens()));
         response.setHeader("X-RateLimit-Remaining", String.valueOf(bucket.getAvailableTokens())); // Assuming you have a method to get available tokens
         response.setHeader("X-RateLimit-Reset", String.valueOf(bucket.getResetTime())); // Implement this method in TokenBucket

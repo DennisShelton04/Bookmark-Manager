@@ -20,8 +20,7 @@ public class BookmarkService {
   private final BookmarkRepository bookmarkRepository;
   private final FolderRepository folderRepository;
 
-  // Method to add a new bookmark
-  @Transactional
+
   public Bookmark addBookmark(Bookmark bookmark) {
     // Validate the URL and title (basic example)
     if (bookmark.getUrl() == null || bookmark.getUrl().isBlank()) {
@@ -41,7 +40,7 @@ public class BookmarkService {
       }
     }
 
-    // Save the bookmark in the database
+
     return bookmarkRepository.save(bookmark);
   }
 
@@ -51,17 +50,17 @@ public class BookmarkService {
   }
 
   public Bookmark updateBookmark(UUID id, Bookmark bookmarkDetails) {
-    // Find the bookmark by ID, throw an exception if not found
+
     Bookmark existingBookmark = bookmarkRepository.findById(id)
             .orElseThrow(() -> new IllegalArgumentException("Bookmark not found with ID: " + id));
 
-    // Update the bookmark details
+
     existingBookmark.setTitle(bookmarkDetails.getTitle());
     existingBookmark.setUrl(bookmarkDetails.getUrl());
     if(existingBookmark.getFolderId()!=null) {
       existingBookmark.setFolder(bookmarkDetails.getFolder());
     }
-    // Save and return the updated bookmark
+    
     return bookmarkRepository.save(existingBookmark);
   }
 
