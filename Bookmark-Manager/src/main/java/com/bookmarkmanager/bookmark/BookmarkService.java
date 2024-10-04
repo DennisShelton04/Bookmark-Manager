@@ -25,10 +25,8 @@ public class BookmarkService {
 
 
   public Bookmark addBookmark(Bookmark bookmark) {
-    // Validate the URL and title (basic example)
-    precheckBookmark(bookmark);
 
-    // If folderId is provided, associate the bookmark with the folder
+    precheckBookmark(bookmark);
     if (bookmark.getFolderId() != null) {
       Optional<Folder> folderOptional = folderRepository.findById(bookmark.getFolderId());
       if (folderOptional.isPresent()) {
