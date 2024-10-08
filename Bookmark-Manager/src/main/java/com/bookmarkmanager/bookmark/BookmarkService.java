@@ -1,6 +1,7 @@
 package com.bookmarkmanager.bookmark;
 
 import com.bookmarkmanager.bookmarkfolder.FolderRepository;
+import com.bookmarkmanager.exception.BookmarkManagerException;
 import com.bookmarkmanager.exception.BookmarkNotFoundException;
 import com.bookmarkmanager.exception.ResourceNotFoundException;
 import com.bookmarkmanager.pojo.Bookmark;
@@ -8,8 +9,7 @@ import com.bookmarkmanager.pojo.Folder;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,20 +17,16 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class BookmarkService {
+  public static final String FIELD = "field";
+  public static final String MESSAGE = "message";
+  public static final String ERROR_CODE = "errorCode";
   private final BookmarkRepository bookmarkRepository;
   private final FolderRepository folderRepository;
 
 
   public Bookmark addBookmark(Bookmark bookmark) {
-    // Validate the URL and title (basic example)
-    if (bookmark.getUrl() == null || bookmark.getUrl().isBlank()) {
-      throw new IllegalArgumentException("URL cannot be blank");
-    }
-    if (bookmark.getTitle() == null || bookmark.getTitle().isBlank()) {
-      throw new IllegalArgumentException("Title cannot be blank");
-    }
 
-    // If folderId is provided, associate the bookmark with the folder
+    precheckBookmark(bookmark);
     if (bookmark.getFolderId() != null) {
       Optional<Folder> folderOptional = folderRepository.findById(bookmark.getFolderId());
       if (folderOptional.isPresent()) {
@@ -43,6 +39,40 @@ public class BookmarkService {
 
     return bookmarkRepository.save(bookmark);
   }
+
+  private void precheckBookmark(Bookmark bookmark) {
+    List<Map<String, String>> errors = new ArrayList<>();
+
+    if (bookmark.getUrl() == null || bookmark.getUrl().isBlank()) {
+      errors.add(Map.of(
+              FIELD, "url",
+              MESSAGE, "URL cannot be blank",
+              ERROR_CODE, "INVALID_URL"
+      ));
+    }
+
+    if (bookmark.getTitle() == null || bookmark.getTitle().isBlank()) {
+      errors.add(Map.of(
+              FIELD, "title",
+              MESSAGE, "Title cannot be blank",
+              ERROR_CODE, "INVALID_TITLE"
+      ));
+    }
+
+    if (bookmark.getUserId() == null) {
+      errors.add(Map.of(
+              FIELD, "userId",
+              MESSAGE, "User ID cannot be null",
+              ERROR_CODE, "INVALID_USER_ID"
+      ));
+    }
+
+    // If there are errors, throw an exception with all the collected errors
+    if (!errors.isEmpty()) {
+      throw new BookmarkManagerException("Invalid Arguments",errors);
+    }
+  }
+
 
   public Bookmark getBookmarkById(UUID id) {
     return bookmarkRepository.findById(id)
@@ -60,7 +90,7 @@ public class BookmarkService {
     if(existingBookmark.getFolderId()!=null) {
       existingBookmark.setFolder(bookmarkDetails.getFolder());
     }
-    
+
     return bookmarkRepository.save(existingBookmark);
   }
 
