@@ -7,10 +7,7 @@ import com.bookmarkmanager.exception.ResourceNotFoundException;
 import com.bookmarkmanager.pojo.Bookmark;
 import com.bookmarkmanager.pojo.Folder;
 import lombok.RequiredArgsConstructor;
-
-import java.time.LocalDateTime;
 import java.util.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,9 +21,10 @@ public class BookmarkService {
   private final FolderRepository folderRepository;
 
 
+  @Transactional
   public Bookmark addBookmark(Bookmark bookmark) {
 
-    precheckBookmark(bookmark);
+    validateBookmark(bookmark);
     if (bookmark.getFolderId() != null) {
       Optional<Folder> folderOptional = folderRepository.findById(bookmark.getFolderId());
       if (folderOptional.isPresent()) {
@@ -40,7 +38,7 @@ public class BookmarkService {
     return bookmarkRepository.save(bookmark);
   }
 
-  private void precheckBookmark(Bookmark bookmark) {
+  private void validateBookmark(Bookmark bookmark) {
     List<Map<String, String>> errors = new ArrayList<>();
 
     if (bookmark.getUrl() == null || bookmark.getUrl().isBlank()) {
@@ -80,6 +78,7 @@ public class BookmarkService {
   }
 
   public Bookmark updateBookmark(UUID id, Bookmark bookmarkDetails) {
+    validateBookmark(bookmarkDetails);
 
     Bookmark existingBookmark = bookmarkRepository.findById(id)
             .orElseThrow(() -> new IllegalArgumentException("Bookmark not found with ID: " + id));
