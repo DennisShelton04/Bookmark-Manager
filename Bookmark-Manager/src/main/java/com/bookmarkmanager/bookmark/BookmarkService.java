@@ -22,7 +22,7 @@ public class BookmarkService {
 
 
   @Transactional
-  public Bookmark addBookmark(Bookmark bookmark) {
+  public Bookmark createBookmark(Bookmark bookmark) {
 
     validateBookmark(bookmark);
     if (bookmark.getFolderId() != null) {
@@ -65,7 +65,6 @@ public class BookmarkService {
       ));
     }
 
-    // If there are errors, throw an exception with all the collected errors
     if (!errors.isEmpty()) {
       throw new BookmarkManagerException("Invalid Arguments",errors);
     }

@@ -23,7 +23,7 @@ public class BookMarkController {
   // Create a new bookmark
   @PostMapping
   public ResponseEntity<UUID> createBookmark(@RequestBody Bookmark bookmark) {
-    Bookmark createdBookmark = bookmarkService.addBookmark(bookmark);
+    Bookmark createdBookmark = bookmarkService.createBookmark(bookmark);
     return ResponseEntity.created(URI.create("/bookmarks/" + createdBookmark.getId()))
             .body(createdBookmark.getId());
   }
