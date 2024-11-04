@@ -1,5 +1,6 @@
 package com.bookmarkmanager.pojo;
 
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,11 +8,14 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 @Data
+@Entity
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "users")
 public class User {
-  private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private long id;
   private String username;
-  private String email;
-  private List<Folder> folders;
+  private String password;
 }
