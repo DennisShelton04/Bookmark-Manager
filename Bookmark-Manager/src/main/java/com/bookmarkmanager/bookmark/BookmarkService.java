@@ -7,6 +7,9 @@ import com.bookmarkmanager.exception.ResourceNotFoundException;
 import com.bookmarkmanager.pojo.Bookmark;
 import com.bookmarkmanager.pojo.Folder;
 import lombok.RequiredArgsConstructor;
+
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,6 +50,16 @@ public class BookmarkService {
               MESSAGE, "URL cannot be blank",
               ERROR_CODE, "INVALID_URL"
       ));
+    } else {
+      try {
+        new URL(bookmark.getUrl());
+      } catch (MalformedURLException e) {
+        errors.add(Map.of(
+                FIELD, "url",
+                MESSAGE, "Invalid URL format",
+                ERROR_CODE, "INVALID_URL_FORMAT"
+        ));
+      }
     }
 
     if (bookmark.getTitle() == null || bookmark.getTitle().isBlank()) {
@@ -55,7 +68,14 @@ public class BookmarkService {
               MESSAGE, "Title cannot be blank",
               ERROR_CODE, "INVALID_TITLE"
       ));
+    } else if (bookmark.getTitle().length() > 50) {
+      errors.add(Map.of(
+              FIELD, "title",
+              MESSAGE, "Title cannot exceed 50 characters",
+              ERROR_CODE, "TITLE_TOO_LONG"
+      ));
     }
+
 
     if (bookmark.getUserId() == null) {
       errors.add(Map.of(
@@ -66,7 +86,7 @@ public class BookmarkService {
     }
 
     if (!errors.isEmpty()) {
-      throw new BookmarkManagerException("Invalid Arguments",errors);
+      throw new BookmarkManagerException("Invalid Arguments", errors);
     }
   }
 
@@ -76,6 +96,7 @@ public class BookmarkService {
             .orElseThrow(() -> new BookmarkNotFoundException("Bookmark not found with id: " + id));
   }
 
+  @Transactional
   public Bookmark updateBookmark(UUID id, Bookmark bookmarkDetails) {
     validateBookmark(bookmarkDetails);
 
@@ -85,7 +106,7 @@ public class BookmarkService {
 
     existingBookmark.setTitle(bookmarkDetails.getTitle());
     existingBookmark.setUrl(bookmarkDetails.getUrl());
-    if(existingBookmark.getFolderId()!=null) {
+    if (existingBookmark.getFolderId() != null) {
       existingBookmark.setFolder(bookmarkDetails.getFolder());
     }
 
