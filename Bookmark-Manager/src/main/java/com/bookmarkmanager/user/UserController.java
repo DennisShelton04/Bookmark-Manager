@@ -4,9 +4,7 @@ import com.bookmarkmanager.pojo.User;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class UserController {
@@ -24,5 +22,12 @@ public class UserController {
     public String  loginUser(@RequestBody User user) {
         return userService.verifyUser(user);
     }
+
+  @GetMapping("/exchange-token")
+  public String exchangeForToken(@RequestParam String token) {
+    return userService.exchangeForToken(token);
+  }
+
+
 
 }
