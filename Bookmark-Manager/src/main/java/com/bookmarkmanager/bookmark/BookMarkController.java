@@ -38,7 +38,7 @@ public class BookMarkController {
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<Bookmark> updateBookmark(@PathVariable UUID id, @RequestBody BookmarkDTO bookmarkDetails) {
+  public ResponseEntity<Bookmark> updateBookmark(@PathVariable UUID id, @RequestBody Bookmark bookmarkDetails) {
     Bookmark updatedBookmark = bookmarkService.updateBookmark(id, bookmarkDetails);
     return ResponseEntity.ok(updatedBookmark);
   }

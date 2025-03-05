@@ -29,10 +29,10 @@ public class BookmarkService {
   public Bookmark createBookmark(Bookmark bookmark) {
 
     validateBookmark(bookmark);
-    if (bookmark.getFolderId() != null) {
-      Optional<Folder> folderOptional = folderRepository.findById(bookmark.getFolderId());
+    if (bookmark.getFolder().getId() != null) {
+      Optional<Folder> folderOptional = folderRepository.findById(bookmark.getFolder().getId());
       if (folderOptional.isPresent()) {
-        bookmark.setFolderId(folderOptional.get().getId());
+        bookmark.getFolder().setId(folderOptional.get().getId());
       } else {
         throw new IllegalArgumentException("Invalid folder ID");
       }
@@ -108,7 +108,7 @@ public class BookmarkService {
 
     existingBookmark.setTitle(bookmarkDetails.getTitle());
     existingBookmark.setUrl(bookmarkDetails.getUrl());
-    if (existingBookmark.getFolderId() != null) {
+    if (existingBookmark.getFolder().getId() != null) {
       existingBookmark.setFolder(bookmarkDetails.getFolder());
     }
     
