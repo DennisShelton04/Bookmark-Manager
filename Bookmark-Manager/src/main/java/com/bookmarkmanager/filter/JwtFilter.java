@@ -20,12 +20,14 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 @Component
 public class JwtFilter extends OncePerRequestFilter {
-  @Autowired
-  private JwtService jwtService;
+  private final JwtService jwtService;
+  private final UserDetailService userDetailService;
 
   @Autowired
-  private UserDetailService userDetailService;
-
+  public JwtFilter(JwtService jwtService, UserDetailService userDetailService) {
+    this.jwtService = jwtService;
+    this.userDetailService = userDetailService;
+  }
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
     String authorizationHeader = request.getHeader("Authorization");

@@ -28,6 +28,7 @@ public class JwtService {
         validateSecretKey();
     }
 
+
     private void validateSecretKey() {
         try {
             SecretKey secretKey = new SecretKeySpec(secret.getBytes(), "HmacSHA256");
