@@ -1,6 +1,7 @@
 package com.bookmarkmanager.bookmark;
 
 
+import com.bookmarkmanager.dto.BookmarkDTO;
 import com.bookmarkmanager.annotation.RateLimited;
 import com.bookmarkmanager.pojo.Bookmark;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +21,7 @@ public class BookMarkController {
   private final BookmarkService bookmarkService;
 
 
-  // Create a new bookmark
+
   @PostMapping
   public ResponseEntity<UUID> createBookmark(@RequestBody Bookmark bookmark) {
     Bookmark createdBookmark = bookmarkService.createBookmark(bookmark);
@@ -42,7 +43,7 @@ public class BookMarkController {
     return ResponseEntity.ok(updatedBookmark);
   }
 
-  // Delete a bookmark by ID
+
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> deleteBookmark(@PathVariable UUID id) {
     bookmarkService.deleteBookmark(id);

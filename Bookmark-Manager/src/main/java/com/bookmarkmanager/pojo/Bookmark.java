@@ -22,10 +22,8 @@ public class Bookmark {
   private String url;
   private UUID userId;
   @ManyToOne
-  @JoinColumn(name = "folder_id") // Foreign key to the Folder entity
+  @JoinColumn(name = "folder_id")
   private Folder folder;
-  @Transient
-  private UUID folderId;        // The folder this bookmark belongs to
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
   @PrePersist

@@ -2,6 +2,7 @@ package com.bookmarkmanager.bookmark;
 
 import com.bookmarkmanager.bookmarkfolder.FolderRepository;
 import com.bookmarkmanager.exception.BookmarkManagerException;
+import com.bookmarkmanager.dto.BookmarkDTO;
 import com.bookmarkmanager.exception.BookmarkNotFoundException;
 import com.bookmarkmanager.exception.ResourceNotFoundException;
 import com.bookmarkmanager.pojo.Bookmark;
@@ -28,10 +29,10 @@ public class BookmarkService {
   public Bookmark createBookmark(Bookmark bookmark) {
 
     validateBookmark(bookmark);
-    if (bookmark.getFolderId() != null) {
-      Optional<Folder> folderOptional = folderRepository.findById(bookmark.getFolderId());
+    if (bookmark.getFolder().getId() != null) {
+      Optional<Folder> folderOptional = folderRepository.findById(bookmark.getFolder().getId());
       if (folderOptional.isPresent()) {
-        bookmark.setFolderId(folderOptional.get().getId());
+        bookmark.getFolder().setId(folderOptional.get().getId());
       } else {
         throw new IllegalArgumentException("Invalid folder ID");
       }
@@ -91,6 +92,7 @@ public class BookmarkService {
   }
 
 
+
   public Bookmark getBookmarkById(UUID id) {
     return bookmarkRepository.findById(id)
             .orElseThrow(() -> new BookmarkNotFoundException("Bookmark not found with id: " + id));
@@ -106,10 +108,10 @@ public class BookmarkService {
 
     existingBookmark.setTitle(bookmarkDetails.getTitle());
     existingBookmark.setUrl(bookmarkDetails.getUrl());
-    if (existingBookmark.getFolderId() != null) {
+    if (existingBookmark.getFolder().getId() != null) {
       existingBookmark.setFolder(bookmarkDetails.getFolder());
     }
-
+    
     return bookmarkRepository.save(existingBookmark);
   }
 

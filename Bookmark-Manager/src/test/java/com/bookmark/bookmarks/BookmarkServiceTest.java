@@ -20,7 +20,6 @@ import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
 
-
 class BookmarkServiceTest {
 
   BookmarkRepository bookmarkRepository = mock(BookmarkRepository.class);
@@ -36,7 +35,7 @@ class BookmarkServiceTest {
     bookmark.setTitle("Sample Title");
     bookmark.setUrl("http://example.com");
     bookmark.setUserId(generateUUID());
-    bookmark.setFolderId(folderId);
+    bookmark.getFolder().setId(folderId);
     return bookmark;
   }
 
@@ -75,7 +74,7 @@ class BookmarkServiceTest {
   void test_create_bookmark_with_invalid_folder_id() {
     // Given
     Bookmark bookmark = createSampleBookmark(generateUUID());
-    when(folderRepository.findById(bookmark.getFolderId())).thenReturn(Optional.empty());
+    when(folderRepository.findById(bookmark.getFolder().getId())).thenReturn(Optional.empty());
 
     // When & Then
     IllegalArgumentException exception = assertThrows(
