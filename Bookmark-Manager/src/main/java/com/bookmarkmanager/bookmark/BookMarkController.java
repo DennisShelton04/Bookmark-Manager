@@ -1,16 +1,13 @@
 package com.bookmarkmanager.bookmark;
 
 
-import com.bookmarkmanager.dto.BookmarkDTO;
 import com.bookmarkmanager.annotation.RateLimited;
 import com.bookmarkmanager.pojo.Bookmark;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+
 
 import java.net.URI;
 import java.util.UUID;
-import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

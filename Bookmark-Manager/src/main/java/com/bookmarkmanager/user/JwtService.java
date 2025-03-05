@@ -34,8 +34,6 @@ public class JwtService {
             SecretKey secretKey = new SecretKeySpec(secret.getBytes(), "HmacSHA256");
             Mac mac = Mac.getInstance("HmacSHA256");
             mac.init(secretKey);
-            String encodedSecret = Base64.getEncoder().encodeToString(secretKey.getEncoded());
-            System.out.println("Base64-encoded Secret Key: " + encodedSecret);
         } catch (Exception e) {
             throw new RuntimeException("Error initializing HMAC with secret", e);
         }
