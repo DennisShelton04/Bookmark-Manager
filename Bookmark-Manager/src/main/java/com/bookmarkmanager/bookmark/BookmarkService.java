@@ -2,6 +2,7 @@ package com.bookmarkmanager.bookmark;
 
 import com.bookmarkmanager.bookmarkfolder.FolderRepository;
 import com.bookmarkmanager.exception.BookmarkManagerException;
+import com.bookmarkmanager.dto.BookmarkDTO;
 import com.bookmarkmanager.exception.BookmarkNotFoundException;
 import com.bookmarkmanager.exception.ResourceNotFoundException;
 import com.bookmarkmanager.pojo.Bookmark;
@@ -91,6 +92,7 @@ public class BookmarkService {
   }
 
 
+
   public Bookmark getBookmarkById(UUID id) {
     return bookmarkRepository.findById(id)
             .orElseThrow(() -> new BookmarkNotFoundException("Bookmark not found with id: " + id));
@@ -109,7 +111,7 @@ public class BookmarkService {
     if (existingBookmark.getFolderId() != null) {
       existingBookmark.setFolder(bookmarkDetails.getFolder());
     }
-
+    
     return bookmarkRepository.save(existingBookmark);
   }
 

@@ -25,7 +25,7 @@ public class TokenBucket {
   }
 
   public synchronized long getAvailableTokens() {
-    refill(); // Ensure tokens are refilled before checking
+    refill();
     return tokens;
   }
 
