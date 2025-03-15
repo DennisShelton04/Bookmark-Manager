@@ -36,7 +36,7 @@ public class SecurityConfiguration {
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     return http.csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(request -> request
-                    .requestMatchers("/h2-console/**", "/register", "/login").permitAll()
+                    .requestMatchers("/h2-console/**", "/register", "/login","/exchange-token").permitAll()
                     .anyRequest().authenticated())
             .httpBasic(Customizer.withDefaults())
             .sessionManagement(session ->
