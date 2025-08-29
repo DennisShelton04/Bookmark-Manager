@@ -29,7 +29,7 @@ public class BookmarkService {
   public Bookmark createBookmark(Bookmark bookmark) {
 
     validateBookmark(bookmark);
-    if (bookmark.getFolder().getId() != null) {
+    if (bookmark.getFolder() != null && bookmark.getFolder().getId() != null) {
       Optional<Folder> folderOptional = folderRepository.findById(bookmark.getFolder().getId());
       if (folderOptional.isPresent()) {
         bookmark.getFolder().setId(folderOptional.get().getId());
